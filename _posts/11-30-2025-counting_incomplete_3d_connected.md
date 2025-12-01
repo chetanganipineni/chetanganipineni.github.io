@@ -1,3 +1,9 @@
+---
+title: "Counting Incomplete 3D Connected Cubes"
+date: 2025-11-30
+tags: [math, geometry]
+---
+
 # Counting Incomplete 3D Connected Cubes
 
 The following is the code block for solving one part:
