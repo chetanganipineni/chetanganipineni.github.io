@@ -3,26 +3,13 @@ layout: home
 title: "Chetan's Notes and Research"
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Blog</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="_posts/11-30-2025-counting_incomplete_3d_connected.md">Counting Incomplete 3d Connected Cubes</a></li>
-            </ul>
-            <ul>
-                <li><a href="_posts/08-07-2025-intro_post.md">Introduction Post</a></li>
-            </ul>
-        </nav>
-    </header>
+<h1>Latest Posts</h1>
 
-
-</body>
-</html>
+<ul>
+  {% for post in site.posts %}
+    <li>
+      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      <span style="color:#777;">— {{ post.date | date: "%B %d, %Y" }}</span>
+    </li>
+  {% endfor %}
+</ul>
