@@ -1,0 +1,11 @@
+title: "Chetan's Blog"
+description: "Computer Science, Security, Math, etc."
+theme: minima
+
+markdown: kramdown
+highlighter: rouge
+
+plugins:
+  - jekyll-feed
+
+permalink: /:year/:month/:day/:title/
