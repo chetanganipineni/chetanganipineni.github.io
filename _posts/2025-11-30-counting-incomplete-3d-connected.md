@@ -4,19 +4,20 @@ date: 2025-11-30
 tags: [math, geometry]
 ---
 
+{% include mathjax.html %}
+
 From my office, I saw this problem, which is based on a 3Blue1Brown video, posted on a colleague's desk:
 
-"Consider the set of all incomplete, open cubes thar are also 3-D, connected, and rotationally unique. What is the size of this set?
-
-Definitions:
-Open-Cube: Only the edges are present, no faces
-
-3-D: At least on edge along each of the 3 dimensions
-
-Connected: Singular structure
-
-Rotationally Unique: Two structures that can be rotated to look the same are considered identical
-"
+> Consider the set of all **incomplete, open cubes** that are also  
+> **3-dimensional**, **connected**, and **rotationally unique**.  
+> What is the size of this set?
+>
+> **Definitions**
+>
+> • **Open Cube:** Only the edges are present; no faces exist.  
+> • **3-D:** The structure must include at least one edge oriented along each of the three coordinate axes.  
+> • **Connected:** The structure is a single contiguous graph (no separate components).  
+> • **Rotationally Unique:** Two structures are considered the same if one can be rotated to match the other.
 
 I decided to take a jab at this problem in my free time. And luckily after a couple of months, I was able to solve it. In this post, I'll share my solution and thought process.
 
