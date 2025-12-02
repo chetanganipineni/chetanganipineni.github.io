@@ -4,7 +4,33 @@ date: 2025-11-30
 tags: [math, geometry]
 ---
 
-# Counting Incomplete 3D Connected Cubes
+From my office, I saw this problem, which is based on a 3Blue1Brown video, posted on a colleague's desk:
+
+"Consider the set of all incomplete, open cubes thar are also 3-D, connected, and rotationally unique. What is the size of this set?
+
+Definitions:
+Open-Cube: Only the edges are present, no faces
+
+3-D: At least on edge along each of the 3 dimensions
+
+Connected: Singular structure
+
+Rotationally Unique: Two structures that can be rotated to look the same are considered identical
+"
+
+I decided to take a jab at this problem in my free time. And luckily after a couple of months, I was able to solve it. In this post, I'll share my solution and thought process.
+
+**Disclaimer:** I tried to limit my use of computers for this problem, but I did use it to solve a portion of it.
+
+### Initial Thoughts
+
+Immediately, when I read the problem, I thought it had to be related to Burnside's Lemma, which is a counting technique often used to solve problems involving symmetry.
+
+The formula for Burnside's Lemma is:
+
+\[|X/G| = \frac{1}{|G|} \sum_{g \in G} |X^g|\]
+
+I won't go into all the details of this lemma, as you need to know group actions to fully understand it.
 
 The following is the code block for solving one part:
 
@@ -12,7 +38,7 @@ The following is the code block for solving one part:
 
 ```python
 
-def incomplete_connected_3d_cube_count():
+def incomplete_3d_connected_cube_count():
     # used to check if cude is 3d
     is_x_visited = [False]
     is_y_visited = [False]
@@ -20,6 +46,8 @@ def incomplete_connected_3d_cube_count():
 
     all_incomplete_cubes = set()
     visited = set()
+
+
 
     adj_matrix = {"x1": ["z1", "z2", "y3", "y4"],
                   "x2": ["z1", "z2", "y1", "y2"],
@@ -72,16 +100,6 @@ def incomplete_connected_3d_cube_count():
 
     for start_node in adj_matrix.keys():
         dfs(start_node)
-
-    #just checking certain families
-    # i = 0
-    # for cube in all_incomplete_cubes:
-    #     if len(cube) == 12:
-    #         i += 1
-    #         print(cube)
-    #     if len(cube) < 3:
-    #         print("error")   
-    # print(i)
 
     return len(all_incomplete_cubes) - 1 #removing complete cube
 
