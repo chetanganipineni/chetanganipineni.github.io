@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-12-15T22:52:52-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Chetan’s Notes and Research</title><subtitle>Computer Science, Security, Math, etc.</subtitle><entry><title type="html">Counting Incomplete 3D Connected Cubes</title><link href="http://localhost:4000/2025/11/30/counting-incomplete-3d-connected/" rel="alternate" type="text/html" title="Counting Incomplete 3D Connected Cubes" /><published>2025-11-30T00:00:00-05:00</published><updated>2025-11-30T00:00:00-05:00</updated><id>http://localhost:4000/2025/11/30/counting-incomplete-3d-connected</id><content type="html" xml:base="http://localhost:4000/2025/11/30/counting-incomplete-3d-connected/"><![CDATA[<script>
+  MathJax = {
+    tex: {
+      inlineMath: [["$", "$"], ["\\(", "\\)"]],
+      displayMath: [["\\[", "\\]"], ["$$", "$$"]]
+    }
+  };
+</script>
+
+<script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<p>From my office I saw this problem, which is based on a 3Blue1Brown video, posted on a colleague’s desk:</p>
+
+<blockquote>
+  <p>Consider the set of all <strong>incomplete, open cubes</strong> that are also<br />
+<strong>3-dimensional</strong>, <strong>connected</strong>, and <strong>rotationally unique</strong>.<br />
+What is the size of this set?</p>
+
+  <p><strong>Definitions</strong></p>
+
+  <p>• <strong>Open Cube:</strong> Only the edges are present; no faces exist.<br />
+• <strong>3-D:</strong> The structure must include at least one edge oriented along each of the three coordinate axes.<br />
+• <strong>Connected:</strong> The structure is a single contiguous graph (no separate components).<br />
+• <strong>Rotationally Unique:</strong> Two structures are considered the same if one can be rotated to match the other.</p>
+</blockquote>
+
+<p>I decided to take a jab at this problem in my free time. And after a couple of months, I was able to solve it. In this post, I’ll share my solution and thought process.</p>
+
+<p><strong>Disclaimer:</strong> I tried to limit my use of computers for this problem, but I did use it to solve a portion of it.</p>
+
+<h2 id="initial-thoughts">Initial Thoughts</h2>
+
+<p>Immediately when I read the problem, I thought it had to be related to Burnside’s Lemma, which is a counting technique often used to solve problems involving symmetry.</p>
+
+<p>The formula for Burnside’s Lemma is:</p>
+
+\[|X/G| = \frac{1}{|G|} \sum_{g \in G} |X^g|\]
+
+<p>If you haven’t taken Abstract Algebra, this formula may look pretty daunting. You also need to understand group actions. I won’t go into all the details, but I’ll try to explain everything in layman terms. I am also going to handdraw the pictures in this article so apologize if they look bad :P.</p>
+
+<h2 id="understanding-the-problem">Understanding the Problem</h2>
+
+<p>Let’s first define what it means to do an “action” on a cube. Because this is a fixed cube (rigid body), the only actions I can do are rotations. There are 24 possible rotations for a cube:</p>
+
+<ol>
+  <li>Identity rotation AKA not doing anything (1 way)</li>
+  <li>90-degree and 270-degree rotations about axes through centers of faces (6 ways)</li>
+  <li>180-degree rotations about axes through centers of faces (3 ways)</li>
+  <li>60-degree and 120-degree rotations about axes through opposite vertices (8 ways)</li>
+  <li>180-degree rotations about axes through midpoints of opposite edges (6 ways)</li>
+</ol>
+
+<p>I recommend looking at this link visaulizing all the rotations. It will be helpful for understanding the solution below: <a href="https://www.euclideanspace.com/maths/discrete/groups/categorise/finite/cube/index.htm">Cube Rotations</a></p>
+
+<p>Now lets look at some incomplete-3D-connected cubes (i3c) and their orientations. I’ll define an orientation as the position of the cube after a rotation. For example, lets look at this i3c cube:</p>
+
+<figure style="text-align:center">
+  <p><img src="/assets/images/i3c_cubes/missing_leg_table_cube.png" alt="i3c cube with one missing edge" width="320" /></p>
+  <figcaption>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>An i3c cube resembling a table with a missing leg. The dashed line indicates the absent edge.
+</code></pre></div>    </div>
+  </figcaption>
+</figure>
+
+<figure style="text-align:center">
+  <p><img src="/assets/images/i3c_cubes/missing_leg_table_cube_transform.png" alt="i3c cube with one missing edge" width="320" /></p>
+  <figcaption>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>After rotation, the missing leg shifts to the left. I colored the faces blue to help visualize the axis of rotation.
+</code></pre></div>    </div>
+  </figcaption>
+</figure>
+
+<p>Although these are the same cubes, they are in different orientations. How many possible orientations are there for this cube specifically?</p>
+
+<p>Well, suppose the “tabletop” is on the top, the missing leg can be on any four. So I have four orientations there. But now change the position of the tabletop: the tabletop can be on any of the six sides. So in total, there are 4 * 6 = 24 orientations. It may seem like a coincidence that for this i3c cube there are 24 different orientations and for a cube in general there are 24 different possible rotations. In turns out that if you apply the all possible rotations on this i3c cube (you can define the starting orientation as anything), you can get all possible orientations for this cube!</p>
+
+<p>But does this apply to all cubes? No. Let’s look at this i3c cube:</p>
+
+<figure style="text-align:center">
+  <p><img src="/assets/images/i3c_cubes/complete_table_cube.png" alt="i3c cube with one missing edge" width="320" /></p>
+  <figcaption>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>This i3c cube resembles a complete table.
+</code></pre></div>    </div>
+  </figcaption>
+</figure>
+
+<figure style="text-align:center">
+  <p><img src="/assets/images/i3c_cubes/complete_table_cube_transform.png" alt="i3c cube with one missing edge" width="320" /></p>
+  <figcaption>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>After face rotation, the orientation remains unchanged.
+</code></pre></div>    </div>
+  </figcaption>
+</figure>
+
+<p>So if I want to count all possible orientations for this complete table, its just counting the number of faces on a cube, which is six. This is because I can put the tabletop on any of the six sides. Obviously, this is less than the number of rotations of a cube, which is 24, because some rotations will lead to the same orientation, as shown in the picture.</p>
+
+<p>But why should I care about symmetries of various cubes? How does it relate to the problem? It turns out that counting symmetries is the key to understanding how many unique i3c-cubes there are! So lets describe the notation used in Burnside’s Lemma, and then I can finally apply it for the solution.</p>
+
+<h3 id="notation">Notation</h3>
+
+\[|X/G| = \frac{1}{|G|} \sum_{g \in G} |X^g|\]
+
+\[X = \text{Set of all orientations of all possible i3c-cubes.}\]
+
+\[G = \text{Set (group) of all rotations of a cube.}\]
+
+\[|X/G| = \text{number of unique i3c-cubes (what I want to find)}\]
+
+\[|G| = \text{Number of rotations of a cube which is 24.}\]
+
+<p>The next one is the important one:</p>
+
+\[\sum_{g \in G} |X^g|\]
+
+<p>For each rotation \(g \in G\), I count the number of orientations that remain unchanged after applying \(g\). And at the end, I sum them all up and finally divide by 24. This is basically the crux of the problem.</p>
+
+<h2 id="solution">Solution</h2>
+
+<p>Instead of going through all of the 24 rotations one-by-one, I can simplify the counting by grouping similar rotations together. I actually already did that when I listed the five families above in the page. So now, I just need to look at one rotation from each family, see how many orientations remain unchanged, and then multiply by the number of rotations in that family.</p>
+
+<p>Note: I will do the identity “rotation” last, as that ironically is the hardest one to count.</p>
+
+<h3 id="90-degree-and-270-degree-rotations-about-axes-through-centers-of-faces-6-ways">90-degree and 270-degree rotations about axes through centers of faces (6 ways)</h3>
+
+<p>For this rotation, I’m going to have the axis of rotation going through the centers of the top and bottom faces. This rotation is pretty restrictive for symmetries. There are only two orientations that remain unchanged after applying this rotation:</p>
+
+<figure style="text-align:center">
+  <p><img src="/assets/images/i3c_cubes/90_face_rotation.png" alt="i3c cube with one missing edge" width="320" /></p>
+  <figcaption>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>After a 90 degree face rotation, the orientation remains unchanged.
+</code></pre></div>    </div>
+  </figcaption>
+</figure>
+
+<p>Now since there are six rotations in the family, the total count here is: \(2 * 6 = 12.\)</p>
+
+<h3 id="180-degree-rotations-about-axes-through-centers-of-faces-3-ways">180-degree rotations about axes through centers of faces (3 ways)</h3>
+
+<p>Similar to above, I’m going to have axis of rotation going through the centers of the top and bottom faces. This rotation is less restrictive than those in the previous family, so there will be more orientations here. For this, I basically brute forced all possible orientations.</p>
+
+<figure style="text-align:center">
+  <p><img src="/assets/images/i3c_cubes/180_face_rotatation_enumeration.png" alt="i3c cube with one missing edge" width="320" /></p>
+  <figcaption>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I enumerated 22 cubes that remain unchanged after applying this rotation.
+</code></pre></div>    </div>
+  </figcaption>
+</figure>
+
+<p>The total count here is: \(22 * 3 = 66.\)</p>
+
+<h3 id="60-degree-and-120-degree-rotations-about-axes-through-opposite-vertices-8-ways">60-degree and 120-degree rotations about axes through opposite vertices (8 ways)</h3>
+
+<p>This is one’s a bit tricky to visualize. But from a certain vantage point, this is also a pretty restrictive rotation. If you look at the cube directly from the axis of rotation through a pair of oppsite vertices, you can see the cube looks like a hexagon. And the rotation is basically rotating this hexagon by 60 or 120 degrees.</p>
+
+<figure style="text-align:center">
+  <p><img src="/assets/images/i3c_cubes/edge_rotation_shape.png" alt="i3c cube with one missing edge" width="320" /></p>
+  <figcaption>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The shape is a hexagon through this vantage point.
+</code></pre></div>    </div>
+  </figcaption>
+</figure>
+
+<p>I can start off by finding all the symmetries for this 2-D hexagon shape. Okay, but then what? I still need to enumerate all the corresponding i3c cubes.</p>
+
+<p>To find the cubes using this method, I realized that these shapes only describe the vantage point looking directly at one vertex. I need to pair this view with another view from the opposite vertex to get a completed i3c cube. Note that compatible pairs must share the same edges on the ring of the hexagon. Here are all the possible symmetries for this hexagon shape:</p>
+
+<figure style="text-align:center">
+  <p><img src="/assets/images/i3c_cubes/edge_rotation_vantage_points.png" alt="i3c cube with one missing edge" width="320" /></p>
+  <figcaption>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The edges between two symmetries indicates that they are compatible.
+</code></pre></div>    </div>
+  </figcaption>
+</figure>
+
+<figure style="text-align:center">
+  <p><img src="/assets/images/i3c_cubes/edge_rotation_example.png" alt="i3c cube with one missing edge" width="320" /></p>
+  <figcaption>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>An example pair of symmetries that make a i3c cube.
+</code></pre></div>    </div>
+  </figcaption>
+</figure>
+
+<p>So after looking at all compatible pairs, I can enumerate all possible orientations that is symmetrical through a vertex rotation:</p>
+
+<figure style="text-align:center">
+  <p><img src="/assets/images/i3c_cubes/edge_rotation_enumeration.png" alt="i3c cube with one missing edge" width="320" /></p>
+  <figcaption>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I enumerated 11 cubes.
+</code></pre></div>    </div>
+  </figcaption>
+</figure>
+
+<p>The total count here is: \(11 * 8 = 88.\)</p>
+<h3 id="180-degree-rotations-about-axes-through-midpoints-of-opposite-edges-6-ways">180-degree rotations about axes through midpoints of opposite edges (6 ways)</h3>
+
+<p>Now this is probably the trickiest one to visualize, and this is also the non-identity family that contains the most symmetries so I can’t enumerate them all into a picture. But I can still find the total count using the same vantage point technique as above. If you look at the cube from the axis of rotation through the midpoints of opposite edges, you get this shape:</p>
+
+<figure style="text-align:center">
+  <p><img src="/assets/images/i3c_cubes/third_part_shape.png" alt="i3c cube with one missing edge" width="320" /></p>
+  <figcaption>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The shape is similar to the Equinix logo.
+</code></pre></div>    </div>
+  </figcaption>
+</figure>
+
+<p>In order for this method to work, I realized compatible pairs of this shape must share the left and right edges circled in the picture above.</p>
+
+<p>So I can split this section into two cases:</p>
+<ul>
+  <li><strong>Case 1:</strong> The shape contains both the left and right edges (hard lines).</li>
+  <li><strong>Case 2:</strong> The shape does NOT contain both the left and right edges (dashed lines).</li>
+</ul>
+
+<h4 id="case-1">Case 1:</h4>
+
+<p>Here are the possible symmetries:</p>
+
+<figure style="text-align:center">
+  <p><img src="/assets/images/i3c_cubes/case_1_symmetries.png" alt="i3c cube with one missing edge" width="320" /></p>
+  <figcaption>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There are seven symmetries for this case.
+</code></pre></div>    </div>
+  </figcaption>
+</figure>
+
+<p>Note that the ones on the first row cannot be i3c cubes alone and are incompatible with each other. However, the ones on the second row can be i3c cubes alone, and are compatible with all of the symmetries, including those on the first row.</p>
+
+<figure style="text-align:center">
+  <p><img src="/assets/images/i3c_cubes/case_1_example.png" alt="i3c cube with one missing edge" width="320" /></p>
+  <figcaption>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>An example i3c cube made from two compatible symmetries from the first and second rows
+</code></pre></div>    </div>
+  </figcaption>
+</figure>
+
+<p>To find the count:</p>
+
+<ul>
+  <li>Looking at the second row first: The four symmetries can all be paired with each other, including itself. Note that the order matters as well. I am also subtracting one to remove the complete cube. So the count from the second row is: \(4 * 4 - 1 = 15\).</li>
+  <li>Now looking at the first row: each of the three symmetries can be paired with any of the four from the second row. I am multiplying by two because order matters. So the count from the first row is: \(3 * 4 * 2 = 24\).</li>
+</ul>
+
+<p>So in total for case 1, the count is: \(15 + 24 = 39\).</p>
+
+<h4 id="case-2">Case 2:</h4>
+
+<p>Here are the possible symmetries:</p>
+
+<figure style="text-align:center">
+  <p><img src="/assets/images/i3c_cubes/case_2_soft_lines.png" alt="i3c cube with one missing edge" width="320" /></p>
+  <figcaption>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There are also seven symmetries for this case. *Ignore the soft edges*.
+</code></pre></div>    </div>
+  </figcaption>
+</figure>
+
+<figure style="text-align:center">
+  <p><img src="/assets/images/i3c_cubes/case_2_example.png" alt="i3c cube with one missing edge" width="320" /></p>
+  <figcaption>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>And here is an example of a compatible pair that makes a i3c cube.
+</code></pre></div>    </div>
+  </figcaption>
+</figure>
+
+<p>Now from here, I basically had to eyeball all the compatible pairs.</p>
+
+<figure style="text-align:center">
+  <p><img src="/assets/images/i3c_cubes/case_2_hard_lines.png" alt="i3c cube with one missing edge" width="320" /></p>
+  <figcaption>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I drew 14 edges between compatible pairs.
+</code></pre></div>    </div>
+  </figcaption>
+</figure>
+
+<p>Each edge between two symmetries indicates that they are compatible. And they’re all bidirectional edges (except for the one that loops into itself), so each edge indicates two compatible pairs. So from counting all the edges, I get a total of 13 bidirectional edges and one self-loop. So the total count for case 2 is: \(13 * 2 + 1 = 27.\)</p>
+
+<p>So from these two cases, the total count for this family is: \((39 + 27) * 6 = 396.\)</p>
+
+<h3 id="identity-rotation-1-way">Identity rotation (1 way)</h3>
+
+<p>Now is the time for the identity rotation. This one is “interesting” because the identity rotation keeps all orientations unchanged. So basically, I need to count all possible orientations for all i3c cubes. I couldn’t figure out a way to do this through combinatorics, so I wrote a program instead to count it.</p>
+
+<h4 id="implementation-for-finding-all-incomplete-3d-connected-cubes-and-orientations">Implementation for finding all incomplete 3D connected cubes and orientations.</h4>
+
+<p>The following is the code where I used DFS to find all of the orientations. The adjacency matrix represents the edges of the cube and it’s connections.</p>
+
+<figure style="text-align:center">
+  <p><img src="/assets/images/i3c_cubes/adjacency_matrix.png" alt="i3c cube with one missing edge" width="320" /></p>
+  <figcaption>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The illustration of the adjacency matrix that I used in the code.
+</code></pre></div>    </div>
+  </figcaption>
+</figure>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">def</span> <span class="nf">incomplete_3d_connected_cube_count</span><span class="p">():</span>
+    <span class="c1"># used to check if cude is 3d
+</span>    <span class="n">is_x_visited</span> <span class="o">=</span> <span class="p">[</span><span class="bp">False</span><span class="p">]</span>
+    <span class="n">is_y_visited</span> <span class="o">=</span> <span class="p">[</span><span class="bp">False</span><span class="p">]</span>
+    <span class="n">is_z_visited</span> <span class="o">=</span> <span class="p">[</span><span class="bp">False</span><span class="p">]</span>
+
+    <span class="n">all_incomplete_cubes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">visited</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="c1"># the adjacency matrix of the cube based on the picture above
+</span>    <span class="n">adj_matrix</span> <span class="o">=</span> <span class="p">{</span><span class="s">"x1"</span><span class="p">:</span> <span class="p">[</span><span class="s">"z1"</span><span class="p">,</span> <span class="s">"z2"</span><span class="p">,</span> <span class="s">"y3"</span><span class="p">,</span> <span class="s">"y4"</span><span class="p">],</span>
+                  <span class="s">"x2"</span><span class="p">:</span> <span class="p">[</span><span class="s">"z1"</span><span class="p">,</span> <span class="s">"z2"</span><span class="p">,</span> <span class="s">"y1"</span><span class="p">,</span> <span class="s">"y2"</span><span class="p">],</span>
+                  <span class="s">"x3"</span><span class="p">:</span> <span class="p">[</span><span class="s">"z3"</span><span class="p">,</span> <span class="s">"z4"</span><span class="p">,</span> <span class="s">"y3"</span><span class="p">,</span> <span class="s">"y4"</span><span class="p">],</span>
+                  <span class="s">"x4"</span><span class="p">:</span> <span class="p">[</span><span class="s">"z3"</span><span class="p">,</span> <span class="s">"z4"</span><span class="p">,</span> <span class="s">"y1"</span><span class="p">,</span> <span class="s">"y2"</span><span class="p">],</span>
+                  <span class="s">"y1"</span><span class="p">:</span> <span class="p">[</span><span class="s">"x2"</span><span class="p">,</span> <span class="s">"x4"</span><span class="p">,</span> <span class="s">"z1"</span><span class="p">,</span> <span class="s">"z4"</span><span class="p">],</span>
+                  <span class="s">"y2"</span><span class="p">:</span> <span class="p">[</span><span class="s">"x2"</span><span class="p">,</span> <span class="s">"x4"</span><span class="p">,</span> <span class="s">"z2"</span><span class="p">,</span> <span class="s">"z3"</span><span class="p">],</span>
+                  <span class="s">"y3"</span><span class="p">:</span> <span class="p">[</span><span class="s">"x1"</span><span class="p">,</span> <span class="s">"x3"</span><span class="p">,</span> <span class="s">"z1"</span><span class="p">,</span> <span class="s">"z4"</span><span class="p">],</span>
+                  <span class="s">"y4"</span><span class="p">:</span> <span class="p">[</span><span class="s">"x1"</span><span class="p">,</span> <span class="s">"x3"</span><span class="p">,</span> <span class="s">"z2"</span><span class="p">,</span> <span class="s">"z3"</span><span class="p">],</span>
+                  <span class="s">"z1"</span><span class="p">:</span> <span class="p">[</span><span class="s">"x1"</span><span class="p">,</span> <span class="s">"x2"</span><span class="p">,</span> <span class="s">"y1"</span><span class="p">,</span> <span class="s">"y3"</span><span class="p">],</span>
+                  <span class="s">"z2"</span><span class="p">:</span> <span class="p">[</span><span class="s">"x1"</span><span class="p">,</span> <span class="s">"x2"</span><span class="p">,</span> <span class="s">"y2"</span><span class="p">,</span> <span class="s">"y4"</span><span class="p">],</span>
+                  <span class="s">"z3"</span><span class="p">:</span> <span class="p">[</span><span class="s">"x3"</span><span class="p">,</span> <span class="s">"x4"</span><span class="p">,</span> <span class="s">"y2"</span><span class="p">,</span> <span class="s">"y4"</span><span class="p">],</span>
+                  <span class="s">"z4"</span><span class="p">:</span> <span class="p">[</span><span class="s">"x3"</span><span class="p">,</span> <span class="s">"x4"</span><span class="p">,</span> <span class="s">"y1"</span><span class="p">,</span> <span class="s">"y3"</span><span class="p">]}</span>
+    
+    <span class="c1"># This DFS is basically brute forcing all possible connected cubes
+</span>    <span class="k">def</span> <span class="nf">dfs</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">visited</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">node</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'x'</span><span class="p">):</span>
+            <span class="n">is_x_visited</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">if</span> <span class="n">node</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'y'</span><span class="p">):</span>
+            <span class="n">is_y_visited</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">if</span> <span class="n">node</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'z'</span><span class="p">):</span>
+            <span class="n">is_z_visited</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">if</span> <span class="n">is_x_visited</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">is_y_visited</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">is_z_visited</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">all_incomplete_cubes</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">visited</span><span class="p">))</span>
+
+        <span class="n">adj_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="n">adj_matrix</span><span class="p">[</span><span class="n">n</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">neighbor</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+                    <span class="n">adj_set</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">neighbor</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="n">adj_set</span><span class="p">:</span>
+            <span class="n">dfs</span><span class="p">(</span><span class="n">neighbor</span><span class="p">)</span>
+        
+        <span class="n">visited</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="c1"># now check if all visited contains x,y,z
+</span>        <span class="n">is_x_visited</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">is_y_visited</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span> 
+        <span class="n">is_z_visited</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">for</span> <span class="n">v_node</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">v_node</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'x'</span><span class="p">):</span>
+                <span class="n">is_x_visited</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">if</span> <span class="n">v_node</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'y'</span><span class="p">):</span>
+                <span class="n">is_y_visited</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">if</span> <span class="n">v_node</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'z'</span><span class="p">):</span>
+                <span class="n">is_z_visited</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="c1"># start DFS from each node
+</span>    <span class="k">for</span> <span class="n">start_node</span> <span class="ow">in</span> <span class="n">adj_matrix</span><span class="p">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">dfs</span><span class="p">(</span><span class="n">start_node</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_incomplete_cubes</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="c1">#removing complete cube
+</span>
+</code></pre></div></div>
+
+<p>This code takes about five minutes to run, and at the end it returns 2366.</p>
+
+<h3 id="final-calculation">Final Calculation</h3>
+
+<p>I have all of the counts for each family of rotations. Now I can plug everything into Burnside’s Lemma:</p>
+
+\[|X/G| = \frac{1}{24} (12 + 66 + 88 + 396 + 2366) = \frac{2928}{24} = 122\]
+
+<p>So the final answer is: <strong>122 unique incomplete 3D connected cubes</strong>.</p>
+
+<hr />
+<h2 id="references">References</h2>
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=_BrFKp-U8GI">3Blue1Brown Video on the cubes</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Group_action">Group Actions</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Burnside%27s_lemma">Burnside’s Lemma</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Orbit-stabilizer_theorem">Orbit Stabilizer Theorem</a></li>
+</ul>]]></content><author><name></name></author><category term="math" /><category term="geometry" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Welcome</title><link href="http://localhost:4000/2025/08/07/intro-post/" rel="alternate" type="text/html" title="Welcome" /><published>2025-08-07T00:00:00-04:00</published><updated>2025-08-07T00:00:00-04:00</updated><id>http://localhost:4000/2025/08/07/intro-post</id><content type="html" xml:base="http://localhost:4000/2025/08/07/intro-post/"><![CDATA[<p>This blog is a collection of my notes, research, and thoughts on topics ranging from computer science and security engineering to math, history, and more.</p>
+
+<p>I’ll (try to) post:</p>
+<ul>
+  <li>Summaries and highlights from books and papers</li>
+  <li>Deep-dives on security, cryptography, and systems</li>
+  <li>Math problems and solutions</li>
+  <li>Personal reflections and learning journeys</li>
+</ul>
+
+<p>Posts will be posted randomly.</p>]]></content><author><name></name></author><summary type="html"><![CDATA[This blog is a collection of my notes, research, and thoughts on topics ranging from computer science and security engineering to math, history, and more.]]></summary></entry></feed>
