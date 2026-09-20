@@ -1,19 +1,10 @@
-# Personal Blog (GitHub Pages + Jekyll)
+# Personal Blog Readme
 
-(Most of this is AI-generated)
-
-This repository hosts a personal blog built using **GitHub Pages** and **Jekyll**. It is fully static, free to host, and supports Markdown-based posts.
-
-This README explains:
-- Repository layout
-- How GitHub Pages + Jekyll work
-- How posts are generated
-- How builds & deployment work
-- How to run and test the site locally
+For now, I'm building this blog using GitHub Pages and Jekyll. It's free and easy to use with Markdown-based posts, which I mostly write in now.
 
 ---
 
-# 📁 Repository Structure
+# Repository Structure
 
 ```
 .
@@ -26,14 +17,16 @@ This README explains:
 ```
 
 ### `_posts/`
-- All blog posts must live here.
-- Filenames must follow:
+
+All blog posts must live here and must follow these patterns:
+
+1. filenames
 
 ```
 YYYY-MM-DD-title.md
 ```
 
-- Each file must include YAML front‑matter:
+2. YAML front-matter
 
 ```md
 ---
@@ -42,53 +35,67 @@ date: 2025-01-15
 tags: [security, programming]
 ---
 
-Your content here.
+Actual content here.
 ```
 
 ---
 
-# ⚙️ How Jekyll + GitHub Pages Work
+# How Jekyll + GitHub Pages Work
 
-GitHub Pages automatically runs Jekyll **every time you push** to the `main` branch.
+GitHub Pages automatically runs Jekyll every time you push to the `main` branch.
 
 ### What Jekyll does:
 1. Reads `_config.yml`
 2. Reads folders like `_posts/`
-3. Converts Markdown → HTML
-4. Applies layouts from the selected theme (default: **minima**)
+3. Converts Markdown to HTML
+4. Applies layouts from the selected theme
 5. Outputs the final static website
 
-### Important details:
-- GitHub Pages only allows **safe** Jekyll plugins
-- Build output is **not** committed to the repo
-- Published site appears at:
+---
+
+#  Build & Deployment
+
+1. Create a new file under `_posts/`:
 
 ```
-https://<username>.github.io
+_posts/2025-01-20-my-new-article.md
 ```
+
+2. Add front‑matter:
+
+```md
+---
+title: "My New Article"
+date: 2025-01-20
+tags: [programming, security]
+---
+
+Your Markdown content.
+```
+
+3. Don't forget to set up SSH agent:
+
+```sh
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/github
+```
+
+4. Commit and push:
+```sh
+git add .
+git commit -m "Add new article"
+git push
+```
+
+The post is live after ~10 seconds.
 
 ---
 
-# 🏗 Build & Deployment
+# Running Locally
 
-Deployment is **automatic**.
-
-### Deploy steps:
-1. Commit changes
-2. Push to GitHub
-3. GitHub Pages rebuilds the site in ~15–30 seconds
-4. New content becomes live instantly
-
-Nothing else is required—no CI/CD scripts and no server.
-
----
-
-# ▶️ Running Locally (Optional)
-
-To preview locally (recommended), install Jekyll:
+To preview locally, install Jekyll:
 
 ## 1. Install Ruby + Bundler
-(on macOS)
 
 ```sh
 brew install ruby
@@ -123,61 +130,9 @@ Visit:
 http://localhost:4000
 ```
 
-The local server auto‑reloads when you edit files.
-
 ---
 
-# 📝 Adding a New Blog Post
-
-1. Create a new file under `_posts/`:
-
-```
-_posts/2025-01-20-my-new-article.md
-```
-
-2. Add front‑matter:
-
-```md
----
-title: "My New Article"
-date: 2025-01-20
-tags: [programming, security]
----
-
-Your Markdown content.
-```
-
-3. Commit and push:
-```sh
-git add .
-git commit -m "Add new article"
-git push
-```
-
-The post is live.
-
----
-
-# 🏠 How the Homepage Works
-
-`index.html` contains Liquid template code that lists all posts:
-
-```html
-{% raw %}{% for post in site.posts %}
-  <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
-  <p>{{ post.date | date: "%B %d, %Y" }}</p>
-  <p>{{ post.excerpt }}</p>
-{% endfor %}{% endraw %}
-```
-
-Jekyll automatically:
-- sorts posts newest → oldest
-- generates excerpts
-- handles URLs
-
----
-
-# 🎨 Customization
+# Customization
 
 You can customize:
 - CSS in `assets/style.css`
@@ -188,23 +143,4 @@ The default theme is:
 
 ```yaml
 theme: minima
-```
-
----
-
-# 📦 Useful Commands
-
-### Check Jekyll version
-```sh
-jekyll -v
-```
-
-### Clean Jekyll cache
-```sh
-bundle exec jekyll clean
-```
-
-### Rebuild locally
-```sh
-bundle exec jekyll build
 ```
