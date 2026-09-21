@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 120" font-family="monospace" font-size="14">
+  <!-- Arch USB box -->
+  <rect x="20" y="30" width="180" height="60" rx="8" ry="8" fill="#1793d1" stroke="#0e6ea1" stroke-width="2"/>
+  <text x="110" y="56" text-anchor="middle" fill="white" font-weight="bold">Arch USB</text>
+  <text x="110" y="76" text-anchor="middle" fill="#cce5ff" font-size="12">Live Environment</text>
+
+  <!-- Arrow -->
+  <line x1="210" y1="60" x2="370" y2="60" stroke="#555" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="290" y="48" text-anchor="middle" fill="#333" font-weight="bold" font-size="13">pacstrap</text>
+
+  <!-- /mnt box -->
+  <rect x="380" y="30" width="180" height="60" rx="8" ry="8" fill="#333" stroke="#555" stroke-width="2"/>
+  <text x="470" y="56" text-anchor="middle" fill="white" font-weight="bold">/mnt</text>
+  <text x="470" y="76" text-anchor="middle" fill="#aaa" font-size="12">Target Root</text>
+
+  <!-- Arrowhead marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
+    </marker>
+  </defs>
+</svg>
