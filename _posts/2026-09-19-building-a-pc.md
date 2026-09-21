@@ -151,7 +151,7 @@ Then in the back side of the case, I slid in the PSU and screwed it in. I also c
 5. Black USB-C connector - connects to the motherboard USB-C header
 
 <figure style="text-align:center; margin: 1.5rem 0;">
-  <img src="/assets/images/pc_parts/install_gpu_to_motherboard_with_cable.png" alt="ram_motherboard" width="320">
+  <img src="/assets/images/pc_parts/install_gpu_to_motherboard_with_cable.PNG" alt="ram_motherboard" width="320">
   <figcaption>
     GPU screwed into the Motherboard
   </figcaption>
